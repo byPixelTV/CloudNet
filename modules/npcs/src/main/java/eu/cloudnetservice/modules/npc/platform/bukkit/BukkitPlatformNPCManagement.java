@@ -23,6 +23,7 @@ import com.github.juliarn.npclib.bukkit.BukkitPlatform;
 import com.github.juliarn.npclib.bukkit.BukkitWorldAccessor;
 import com.github.juliarn.npclib.bukkit.protocol.BukkitProtocolAdapter;
 import com.github.juliarn.npclib.ext.labymod.LabyModExtension;
+import com.github.retrooper.packetevents.util.PEVersion;
 import com.google.common.base.Preconditions;
 import eu.cloudnetservice.driver.ComponentInfo;
 import eu.cloudnetservice.driver.event.EventManager;
@@ -59,6 +60,8 @@ import org.bukkit.util.NumberConversions;
 @Singleton
 public class BukkitPlatformNPCManagement extends
   PlatformNPCManagement<Location, Player, ItemStack, Inventory, Scoreboard> {
+
+  private static final PEVersion LATEST_PACKET_EVENTS_VERSION = new PEVersion(1, 21, 3);
 
   protected final Plugin plugin;
   protected final Server server;
@@ -279,17 +282,12 @@ public class BukkitPlatformNPCManagement extends
   }
 
   protected @NonNull PlatformPacketAdapter<World, Player, ItemStack, Plugin> resolvePacketAdapter() {
-    var protocolLibAdapter = BukkitProtocolAdapter.protocolLib();
-    try {
-      //noinspection DataFlowIssue
-      protocolLibAdapter.createCustomPayloadPacket("minecraft:test", new byte[0]).schedule((Player) null, null);
-      return protocolLibAdapter;
-    } catch (NullPointerException _) {
-      // the above test code will always throw an NPE if the test passes. We need to handle this as success.
-      return protocolLibAdapter;
-    } catch (Throwable _) {
-      // protocollib is not working, fallback to packet events
-      return BukkitProtocolAdapter.packetEvents();
+    var bukkitVersion = this.server.getBukkitVersion();
+    var parsedVersion = PEVersion.fromString(bukkitVersion.substring(0, bukkitVersion.indexOf("-")));
+    if (parsedVersion.isNewerThan(LATEST_PACKET_EVENTS_VERSION)) {
+      return BukkitProtocolAdapter.protocolLib();
     }
+
+    return BukkitProtocolAdapter.packetEvents();
   }
 }

@@ -47,7 +47,7 @@ tasks.withType<ShadowJar> {
 }
 
 repositories {
-  maven("https://repo.codemc.io/repository/maven-releases/") {
+  maven("https://repo.codemc.io/repository/maven-snapshots/") {
     mavenContent {
       includeGroup("com.github.retrooper")
     }
@@ -57,9 +57,10 @@ repositories {
 dependencies {
   "compileOnly"(projects.wrapperJvm)
   "compileOnly"(projects.modules.bridge)
-  "implementation"(projects.ext.bukkitCommand)
-
   "compileOnly"(libs.bundles.serverPlatform)
+
+  "implementation"(libs.packetEvents)
+  "implementation"(projects.ext.bukkitCommand)
 
   "api"(libs.bundles.npcLib)
 }
