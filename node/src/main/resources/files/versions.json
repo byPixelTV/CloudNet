@@ -89,8 +89,7 @@
       "website": "https://papermc.io",
       "versions": [
         {
-          "name": "latest",
-          "cacheFiles": false,
+          "name": "1.21.3",
           "properties": {
             "copy": {
               "cache/.*": "/",
@@ -101,7 +100,7 @@
               "-Dpaperclip.patchonly=true"
             ],
             "fetchOverPaperApi": true,
-            "versionGroup": "1.21.1"
+            "versionGroup": "1.21.3"
           }
         },
         {
@@ -514,7 +513,7 @@
       "website": "https://fabricmc.net",
       "versions": [
         {
-          "name": "1.21.1",
+          "name": "1.21.3",
           "cacheFiles": false,
           "properties": {
             "copy": {
@@ -674,7 +673,7 @@
           "cacheFiles": false,
           "properties": {
             "fetchOverPaperApi": true,
-            "versionGroup": "3.3.0-SNAPSHOT"
+            "versionGroup": "3.4.0-SNAPSHOT"
           }
         }
       ]
