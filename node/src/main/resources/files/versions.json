@@ -316,8 +316,22 @@
       "versions": [
         {
           "name": "latest",
-          "url": "https://api.purpurmc.org/v2/purpur/1.21.1/latest/download",
+          "url": "https://api.purpurmc.org/v2/purpur/1.21.3/latest/download",
           "cacheFiles": false,
+          "properties": {
+            "copy": {
+              "cache/.*": "/",
+              "versions/.*": "/",
+              "purpur\\.jar": "paper.jar"
+            },
+            "jvmOptions": [
+              "-Dpaperclip.patchonly=true"
+            ]
+          }
+        },
+        {
+          "name": "1.21.3",
+          "url": "https://api.purpurmc.org/v2/purpur/1.21.3/latest/download",
           "properties": {
             "copy": {
               "cache/.*": "/",
@@ -556,7 +570,21 @@
             },
             "fetchOverSpongeApi": true,
             "artifact": "spongevanilla",
-            "mcVersion": "1.21.1"
+            "mcVersion": "1.21.3"
+          },
+          "minJavaVersion": 21
+        },
+        {
+          "name": "1.21.3",
+          "properties": {
+            "copy": {
+              "libraries/.*": "/",
+              "launcher\\.conf": "/",
+              "spongevanilla\\.jar": "/"
+            },
+            "fetchOverSpongeApi": true,
+            "artifact": "spongevanilla",
+            "mcVersion": "1.21.3"
           },
           "minJavaVersion": 21
         },
@@ -702,9 +730,8 @@
       ],
       "versions": [
         {
-          "name": "latest",
-          "url": "https://ci.loohpjames.com/job/Limbo/46/artifact/target/Limbo-0.7.10-ALPHA-1.21.1.jar",
-          "cacheFiles": false
+          "name": "1.21.3",
+          "url": "https://ci.loohpjames.com/job/Limbo/47/artifact/target/Limbo-0.7.11-ALPHA-1.21.3.jar"
         },
         {
           "name": "1.21.1",

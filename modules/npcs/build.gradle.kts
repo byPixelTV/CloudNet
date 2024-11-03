@@ -47,7 +47,7 @@ tasks.withType<ShadowJar> {
 }
 
 repositories {
-  maven("https://repo.codemc.io/repository/maven-snapshots/") {
+  maven("https://repo.codemc.io/repository/maven-releases/") {
     mavenContent {
       includeGroup("com.github.retrooper")
     }
