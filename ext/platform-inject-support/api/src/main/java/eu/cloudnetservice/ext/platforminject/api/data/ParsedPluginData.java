@@ -30,6 +30,7 @@ public record ParsedPluginData(
   @Nullable String description,
   @Nullable String homepage,
   @Nullable String constructionListenerClass,
+  @Nullable Boolean foliaSupported,
   @NonNull Collection<String> authors,
   @NonNull Collection<Command> commands,
   @NonNull Collection<String> pluginFileNames,

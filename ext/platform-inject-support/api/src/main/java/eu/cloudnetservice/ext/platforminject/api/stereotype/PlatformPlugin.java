@@ -42,6 +42,8 @@ public @interface PlatformPlugin {
 
   @NonNull String homepage() default "";
 
+  boolean foliaSupported() default false;
+
   @NonNull String[] authors() default {};
 
   @NonNull Command[] commands() default {};

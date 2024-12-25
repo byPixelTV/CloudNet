@@ -32,7 +32,8 @@ import net.luckperms.api.LuckPermsProvider;
   version = "@version@",
   description = "Brings LuckPerms support to all server platforms",
   pluginFileNames = "plugin.yml",
-  dependencies = @Dependency(name = "LuckPerms")
+  dependencies = @Dependency(name = "LuckPerms"),
+  foliaSupported = true
 )
 public class BukkitLuckPermsPlugin implements PlatformEntrypoint {
 

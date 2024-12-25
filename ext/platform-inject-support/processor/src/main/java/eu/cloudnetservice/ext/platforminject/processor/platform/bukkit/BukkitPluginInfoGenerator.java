@@ -67,6 +67,8 @@ final class BukkitPluginInfoGenerator extends NightConfigInfoGenerator {
     ConfigUtil.putIfValuesPresent(target, "authors", pluginData.authors());
     ConfigUtil.putOrDefault(target, "api-version", pluginData.apiVersion(), "1.13");
 
+    ConfigUtil.putIfPresent(target, "folia-supported", pluginData.foliaSupported());
+
     // collect the plugin dependencies
     var depends = pluginData.dependencies().stream()
       .filter(dep -> !dep.optional())
