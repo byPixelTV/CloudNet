@@ -19,10 +19,11 @@ package eu.cloudnetservice.modules.bridge.platform.velocity.commands;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.platform.PlatformBridgeManagement;
 import java.util.List;
 import lombok.NonNull;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public final class VelocityHubCommand implements SimpleCommand {
 
@@ -42,7 +43,7 @@ public final class VelocityHubCommand implements SimpleCommand {
         this.management.configuration().handleMessage(
           player.getEffectiveLocale(),
           "command-hub-already-in-hub",
-          ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+          message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
           player::sendMessage);
       } else {
         // try to get a fallback for the player
@@ -57,15 +58,15 @@ public final class VelocityHubCommand implements SimpleCommand {
               this.management.configuration().handleMessage(
                 player.getEffectiveLocale(),
                 "command-hub-success-connect",
-                message -> ComponentFormats.BUNGEE_TO_ADVENTURE.convert(
-                  message.replace("%server%", hub.getServerInfo().getName())),
+                message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(
+                  message.replace("%server%", hub.getServerInfo().getName()))),
                 player::sendMessage);
             } else {
               // the connection was not successful
               this.management.configuration().handleMessage(
                 player.getEffectiveLocale(),
                 "command-hub-no-server-found",
-                ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+                message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
                 player::sendMessage);
             }
           });

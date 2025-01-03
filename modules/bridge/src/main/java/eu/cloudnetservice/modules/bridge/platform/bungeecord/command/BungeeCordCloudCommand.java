@@ -17,7 +17,7 @@
 package eu.cloudnetservice.modules.bridge.platform.bungeecord.command;
 
 import eu.cloudnetservice.driver.provider.ClusterNodeProvider;
-import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.platform.PlatformBridgeManagement;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -49,7 +49,11 @@ public final class BungeeCordCloudCommand extends Command implements TabExecutor
     if (args.length == 0) {
       // <prefix> /cloudnet <command>
       sender.sendMessage(
-        ComponentFormats.ADVENTURE_TO_BUNGEE.convert(this.management.configuration().prefix() + "/cloudnet <command>"));
+        MinimessageConverter.convertMinimessageStringToBungee(
+          MinimessageConverter.convertToMinimessage(
+            this.management.configuration().prefix() + "/cloudnet <command>")
+        )
+      );
       return;
     }
     // get the full command line
@@ -63,7 +67,11 @@ public final class BungeeCordCloudCommand extends Command implements TabExecutor
           this.management.configuration().handleMessage(
             player.getLocale(),
             "command-cloud-sub-command-no-permission",
-            message -> ComponentFormats.ADVENTURE_TO_BUNGEE.convert(message.replace("%command%", args[0])),
+            message -> MinimessageConverter.convertMinimessageStringToBungee(
+              MinimessageConverter.convertToMinimessage(
+                message.replace("%command%", args[0])
+              )
+            ),
             sender::sendMessage);
         } else {
           // execute command
@@ -78,7 +86,9 @@ public final class BungeeCordCloudCommand extends Command implements TabExecutor
 
   private void executeNow(@NonNull CommandSender sender, @NonNull String commandLine) {
     for (var output : this.clusterNodeProvider.sendCommandLine(commandLine)) {
-      sender.sendMessage(ComponentFormats.ADVENTURE_TO_BUNGEE.convert(this.management.configuration().prefix() + output));
+      sender.sendMessage(MinimessageConverter.convertMinimessageStringToBungee(
+        MinimessageConverter.convertToMinimessage(this.management.configuration().prefix() + output)
+      ));
     }
   }
 

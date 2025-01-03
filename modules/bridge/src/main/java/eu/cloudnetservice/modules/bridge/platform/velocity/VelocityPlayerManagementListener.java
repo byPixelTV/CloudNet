@@ -28,6 +28,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
 import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.platform.PlatformBridgeManagement;
 import eu.cloudnetservice.modules.bridge.platform.helper.ProxyPlatformHelper;
 import eu.cloudnetservice.modules.bridge.player.NetworkPlayerProxyInfo;
@@ -40,6 +41,7 @@ import lombok.NonNull;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
 
@@ -74,7 +76,7 @@ public final class VelocityPlayerManagementListener {
         this.management.configuration().handleMessage(
           Locale.ENGLISH,
           "proxy-join-cancel-because-maintenance",
-          ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+          message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
           component -> event.setResult(ResultedEvent.ComponentResult.denied(component)));
         return;
       }
@@ -84,7 +86,7 @@ public final class VelocityPlayerManagementListener {
         this.management.configuration().handleMessage(
           Locale.ENGLISH,
           "proxy-join-cancel-because-permission",
-          ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+          message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
           component -> event.setResult(ResultedEvent.ComponentResult.denied(component)));
         return;
       }
@@ -127,7 +129,7 @@ public final class VelocityPlayerManagementListener {
         .orElse(KickedFromServerEvent.DisconnectPlayer.create(this.management.configuration().findMessage(
           event.getPlayer().getEffectiveLocale(),
           "proxy-join-disconnect-because-no-hub",
-          ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+          message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
           Component.empty(),
           true))));
     }

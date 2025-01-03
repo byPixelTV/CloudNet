@@ -17,6 +17,7 @@
 package eu.cloudnetservice.modules.bridge.platform.bungeecord;
 
 import eu.cloudnetservice.common.tuple.Tuple2;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.platform.PlatformBridgeManagement;
 import eu.cloudnetservice.modules.bridge.platform.PlatformPlayerExecutorAdapter;
 import eu.cloudnetservice.modules.bridge.player.executor.ServerSelectorType;
@@ -26,6 +27,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -110,14 +112,14 @@ final class BungeeCordDirectPlayerExecutor extends PlatformPlayerExecutorAdapter
 
   @Override
   public void kick(@NonNull Component message) {
-    this.forEach(player -> player.disconnect(this.convertComponent(message, player)));
+    this.forEach(player -> player.disconnect(this.convertComponent(MinimessageConverter.convertComponentToLegacyString(message), player)));
   }
 
   @Override
   protected void sendTitle(@NonNull Component title, @NonNull Component subtitle, int fadeIn, int stay, int fadeOut) {
     this.forEach(player -> this.proxyServer.createTitle()
-      .title(this.convertComponent(title, player))
-      .subTitle(this.convertComponent(subtitle, player))
+      .title(this.convertComponent(MinimessageConverter.convertComponentToLegacyString(title), player))
+      .subTitle(this.convertComponent(MinimessageConverter.convertComponentToLegacyString(title), player))
       .fadeIn(fadeIn)
       .stay(stay)
       .fadeOut(fadeOut)
@@ -128,7 +130,7 @@ final class BungeeCordDirectPlayerExecutor extends PlatformPlayerExecutorAdapter
   public void sendChatMessage(@NonNull Component message, @Nullable String permission) {
     this.forEach(player -> {
       if (permission == null || player.hasPermission(permission)) {
-        player.sendMessage(this.convertComponent(message, player));
+        player.sendMessage(this.convertComponent(MinimessageConverter.convertComponentToLegacyString(message), player));
       }
     });
   }
@@ -147,12 +149,13 @@ final class BungeeCordDirectPlayerExecutor extends PlatformPlayerExecutorAdapter
     });
   }
 
-  private @NonNull BaseComponent[] convertComponent(@NonNull Component component, @NonNull ProxiedPlayer player) {
+  private @NonNull BaseComponent[] convertComponent(@NonNull String component, @NonNull ProxiedPlayer player) {
     // check if we have to use legacy colors because the client is on an old version
+    Component adventureComponent = MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(component));
     if (player.getPendingConnection().getVersion() < PROTOCOL_VERSION_1_16) {
-      return BungeeComponentSerializer.legacy().serialize(component);
+      return BungeeComponentSerializer.legacy().serialize(adventureComponent);
     } else {
-      return BungeeComponentSerializer.get().serialize(component);
+      return BungeeComponentSerializer.get().serialize(adventureComponent);
     }
   }
 }

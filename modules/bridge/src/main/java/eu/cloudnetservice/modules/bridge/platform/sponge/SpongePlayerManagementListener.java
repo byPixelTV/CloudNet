@@ -16,7 +16,7 @@
 
 package eu.cloudnetservice.modules.bridge.platform.sponge;
 
-import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.platform.PlatformBridgeManagement;
 import eu.cloudnetservice.modules.bridge.platform.helper.ServerPlatformHelper;
 import eu.cloudnetservice.modules.bridge.player.NetworkPlayerServerInfo;
@@ -27,6 +27,7 @@ import jakarta.inject.Singleton;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import lombok.NonNull;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
@@ -69,7 +70,7 @@ public final class SpongePlayerManagementListener {
         this.management.configuration().handleMessage(
           Locale.ENGLISH,
           "server-join-cancel-because-maintenance",
-          ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+          message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
           event::setMessage);
         return;
       }
@@ -80,7 +81,7 @@ public final class SpongePlayerManagementListener {
         this.management.configuration().handleMessage(
           Locale.ENGLISH,
           "server-join-cancel-because-permission",
-          ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+          message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
           event::setMessage);
       }
     }

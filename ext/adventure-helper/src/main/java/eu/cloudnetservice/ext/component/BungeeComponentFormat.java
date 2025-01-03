@@ -48,7 +48,7 @@ final class BungeeComponentFormat extends JavaEditionComponentFormat<BaseCompone
   }
 
   @Override
-  public @NonNull BaseComponent[] encodeStringToComponent(@NonNull String text) {
+  public @NonNull BaseComponent @NonNull [] encodeStringToComponent(@NonNull String text) {
     return TextComponent.fromLegacyText(text);
   }
 }

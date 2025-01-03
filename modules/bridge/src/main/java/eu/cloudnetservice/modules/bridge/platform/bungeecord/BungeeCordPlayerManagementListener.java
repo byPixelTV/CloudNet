@@ -20,7 +20,7 @@ import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializ
 
 import dev.derklaro.reflexion.MethodAccessor;
 import dev.derklaro.reflexion.Reflexion;
-import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.platform.PlatformBridgeManagement;
 import eu.cloudnetservice.modules.bridge.platform.helper.ProxyPlatformHelper;
 import eu.cloudnetservice.modules.bridge.player.NetworkPlayerProxyInfo;
@@ -47,11 +47,12 @@ import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
 @Singleton
-public final class BungeeCordPlayerManagementListener implements Listener {
+public final class     BungeeCordPlayerManagementListener implements Listener {
 
   // https://minecraft.wiki/w/Java_Edition_1.20.2
   // 1.20.2 changed the login process and therefore BungeeCord is somewhat breaking
   private static final int PROTOCOL_1_20_2 = 764;
+
   private static final MethodAccessor<?> PLAYER_DIMENSION_ACCESSOR = Reflexion.get(
       "net.md_5.bungee.UserConnection",
       null)
@@ -96,8 +97,10 @@ public final class BungeeCordPlayerManagementListener implements Listener {
           this.management.configuration().handleMessage(
             player.getLocale(),
             "proxy-join-cancel-because-maintenance",
-            ComponentFormats.ADVENTURE_TO_BUNGEE::convert,
-            player::disconnect);
+            MinimessageConverter::convertMinimessageStringToBungee,
+            player::disconnect
+          );
+
           return;
         }
         // check if a custom permission is required to join
@@ -107,7 +110,7 @@ public final class BungeeCordPlayerManagementListener implements Listener {
           this.management.configuration().handleMessage(
             player.getLocale(),
             "proxy-join-cancel-because-permission",
-            ComponentFormats.ADVENTURE_TO_BUNGEE::convert,
+            MinimessageConverter::convertMinimessageStringToBungee,
             player::disconnect);
           return;
         }
@@ -170,10 +173,12 @@ public final class BungeeCordPlayerManagementListener implements Listener {
         this.management.configuration().handleMessage(
           event.getPlayer().getLocale(),
           "error-connecting-to-server",
-          message -> ComponentFormats.ADVENTURE_TO_BUNGEE.convert(message
+          message -> MinimessageConverter.convertMinimessageStringToBungee(
+            MinimessageConverter.convertToMinimessage(
+              message
             .replace("%server%", event.getKickedFrom().getName())
             // TODO: take a look at single components instead of arrays
-            .replace("%reason%", BaseComponent.toLegacyText(event.getKickReasonComponent()))),
+            .replace("%reason%", MinimessageConverter.convertToMinimessage(BaseComponent.toLegacyText(event.getKickReasonComponent()))))),
           event.getPlayer()::sendMessage);
       } else {
         // no lobby server - the player will disconnect
@@ -184,7 +189,7 @@ public final class BungeeCordPlayerManagementListener implements Listener {
         this.management.configuration().handleMessage(
           event.getPlayer().getLocale(),
           "proxy-join-disconnect-because-no-hub",
-          ComponentFormats.ADVENTURE_TO_BUNGEE::convert,
+          MinimessageConverter::convertMinimessageStringToBungee,
           event::setKickReasonComponent);
       }
     }

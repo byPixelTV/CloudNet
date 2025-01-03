@@ -21,7 +21,7 @@ import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 import eu.cloudnetservice.driver.provider.ClusterNodeProvider;
-import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.platform.PlatformBridgeManagement;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import lombok.NonNull;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 @Singleton
 public final class VelocityCloudCommand implements SimpleCommand {
@@ -51,8 +52,13 @@ public final class VelocityCloudCommand implements SimpleCommand {
     var arguments = invocation.arguments();
     if (arguments.length == 0) {
       // <prefix> /cloudnet <command>
-      invocation.source().sendMessage(ComponentFormats.BUNGEE_TO_ADVENTURE.convert(
-        this.management.configuration().prefix() + "/cloudnet <command>"));
+      invocation.source().sendMessage(
+        MiniMessage.miniMessage().deserialize(
+          MinimessageConverter.convertToMinimessage(
+            this.management.configuration().prefix() + "/cloudnet <command>"
+          )
+        )
+      );
       return;
     }
     // get the full command line
@@ -70,7 +76,13 @@ public final class VelocityCloudCommand implements SimpleCommand {
           this.management.configuration().handleMessage(
             invocation.source() instanceof Player player ? player.getEffectiveLocale() : Locale.ENGLISH,
             "command-cloud-sub-command-no-permission",
-            message -> ComponentFormats.BUNGEE_TO_ADVENTURE.convert(message.replace("%command%", arguments[0])),
+            message -> MiniMessage.miniMessage().deserialize(
+              MinimessageConverter.convertToMinimessage(
+                message.replace(
+                  "%command%", arguments[0]
+                )
+              )
+            ),
             invocation.source()::sendMessage);
         } else {
           // execute the command
@@ -82,8 +94,11 @@ public final class VelocityCloudCommand implements SimpleCommand {
 
   private void executeNow(@NonNull CommandSource source, @NonNull String commandLine) {
     for (var output : this.clusterNodeProvider.sendCommandLine(commandLine)) {
-      source.sendMessage(ComponentFormats.BUNGEE_TO_ADVENTURE.convert(
-        this.management.configuration().prefix() + output));
+      source.sendMessage(MiniMessage.miniMessage().deserialize(
+        MinimessageConverter.convertToMinimessage(
+          this.management.configuration().prefix() + output
+        )
+      ));
     }
   }
 

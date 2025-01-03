@@ -16,7 +16,7 @@
 
 package eu.cloudnetservice.modules.bridge.platform.bungeecord.command;
 
-import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.platform.PlatformBridgeManagement;
 import lombok.NonNull;
 import net.md_5.bungee.api.CommandSender;
@@ -49,7 +49,7 @@ public final class BungeeCordHubCommand extends Command {
         this.management.configuration().handleMessage(
           player.getLocale(),
           "command-hub-already-in-hub",
-          ComponentFormats.ADVENTURE_TO_BUNGEE::convert,
+          MinimessageConverter::convertMinimessageStringToBungee,
           player::sendMessage);
       } else {
         // try to get a fallback for the player
@@ -64,14 +64,14 @@ public final class BungeeCordHubCommand extends Command {
               this.management.configuration().handleMessage(
                 player.getLocale(),
                 "command-hub-success-connect",
-                message -> ComponentFormats.ADVENTURE_TO_BUNGEE.convert(message.replace("%server%", hub.getName())),
+                message -> MinimessageConverter.convertMinimessageStringToBungee(message.replace("%server%", hub.getName())),
                 player::sendMessage);
             } else {
               // the connection was not successful
               this.management.configuration().handleMessage(
                 player.getLocale(),
                 "command-hub-no-server-found",
-                ComponentFormats.ADVENTURE_TO_BUNGEE::convert,
+                MinimessageConverter::convertMinimessageStringToBungee,
                 player::sendMessage);
             }
           }, Reason.COMMAND);

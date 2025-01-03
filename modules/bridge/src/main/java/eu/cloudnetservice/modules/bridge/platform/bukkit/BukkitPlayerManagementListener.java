@@ -16,6 +16,7 @@
 
 package eu.cloudnetservice.modules.bridge.platform.bukkit;
 
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.platform.PlatformBridgeManagement;
 import eu.cloudnetservice.modules.bridge.platform.helper.ServerPlatformHelper;
 import eu.cloudnetservice.modules.bridge.player.NetworkPlayerServerInfo;
@@ -59,7 +60,7 @@ public final class BukkitPlayerManagementListener implements Listener {
         this.management.configuration().handleMessage(
           BukkitUtil.playerLocale(event.getPlayer()),
           "server-join-cancel-because-maintenance",
-          event::setKickMessage);
+          message -> event.setKickMessage(MinimessageConverter.convertToLegacyString(message)));
         return;
       }
       // check if a custom permission is required to join
@@ -69,7 +70,7 @@ public final class BukkitPlayerManagementListener implements Listener {
         this.management.configuration().handleMessage(
           BukkitUtil.playerLocale(event.getPlayer()),
           "server-join-cancel-because-permission",
-          event::setKickMessage);
+          message -> event.setKickMessage(MinimessageConverter.convertToLegacyString(message)));
       }
     }
   }
