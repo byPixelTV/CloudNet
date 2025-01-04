@@ -22,6 +22,7 @@ import eu.cloudnetservice.driver.network.rpc.factory.RPCFactory;
 import eu.cloudnetservice.driver.provider.CloudServiceProvider;
 import eu.cloudnetservice.driver.registry.ServiceRegistry;
 import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.ext.platforminject.api.stereotype.ProvidesFor;
 import eu.cloudnetservice.modules.syncproxy.SyncProxyManagement;
 import eu.cloudnetservice.modules.syncproxy.platform.PlatformSyncProxyManagement;
@@ -97,13 +98,21 @@ public final class BungeeCordSyncProxyManagement extends PlatformSyncProxyManage
 
   @Override
   public void disconnectPlayer(@NonNull ProxiedPlayer player, @NonNull String message) {
-    player.disconnect(ComponentFormats.ADVENTURE_TO_BUNGEE.convert(message));
+    player.disconnect(
+      MinimessageConverter.convertMinimessageStringToBungee(
+        message
+      )
+    );
   }
 
   @Override
   public void messagePlayer(@NonNull ProxiedPlayer player, @Nullable String message) {
     if (message != null) {
-      player.sendMessage(ComponentFormats.ADVENTURE_TO_BUNGEE.convert(message));
+      player.sendMessage(
+        MinimessageConverter.convertMinimessageStringToBungee(
+          message
+        )
+      );
     }
   }
 
