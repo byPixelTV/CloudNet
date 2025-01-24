@@ -16,6 +16,7 @@
 
 package eu.cloudnetservice.modules.bridge.impl.platform.bukkit;
 
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.impl.platform.PlatformBridgeManagement;
 import eu.cloudnetservice.modules.bridge.impl.platform.helper.ServerPlatformHelper;
 import eu.cloudnetservice.modules.bridge.player.NetworkPlayerServerInfo;

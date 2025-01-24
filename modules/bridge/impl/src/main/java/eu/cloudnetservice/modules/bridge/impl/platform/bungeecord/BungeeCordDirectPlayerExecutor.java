@@ -16,6 +16,7 @@
 
 package eu.cloudnetservice.modules.bridge.impl.platform.bungeecord;
 
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.impl.platform.PlatformBridgeManagement;
 import eu.cloudnetservice.modules.bridge.impl.platform.PlatformPlayerExecutorAdapter;
 import eu.cloudnetservice.modules.bridge.player.executor.ServerSelectorType;

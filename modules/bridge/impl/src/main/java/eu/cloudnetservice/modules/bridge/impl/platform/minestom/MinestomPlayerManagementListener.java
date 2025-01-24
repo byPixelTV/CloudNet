@@ -25,6 +25,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.NonNull;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventFilter;
 import net.minestom.server.event.EventNode;
 import net.minestom.server.event.GlobalEventHandler;

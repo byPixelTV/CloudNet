@@ -16,10 +16,9 @@
 
 package eu.cloudnetservice.modules.bridge.impl.platform.bukkit;
 
-import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection;
-
-import eu.cloudnetservice.modules.bridge.impl.platform.PlatformPlayerExecutorAdapter;
 import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
+import eu.cloudnetservice.modules.bridge.impl.platform.PlatformPlayerExecutorAdapter;
+import eu.cloudnetservice.modules.bridge.player.executor.ServerSelectorType;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Supplier;

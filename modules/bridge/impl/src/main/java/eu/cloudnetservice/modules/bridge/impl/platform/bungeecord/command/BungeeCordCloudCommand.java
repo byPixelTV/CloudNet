@@ -17,9 +17,8 @@
 package eu.cloudnetservice.modules.bridge.impl.platform.bungeecord.command;
 
 import eu.cloudnetservice.driver.provider.ClusterNodeProvider;
-import eu.cloudnetservice.ext.component.ComponentFormats;
-import eu.cloudnetservice.modules.bridge.impl.platform.PlatformBridgeManagement;
 import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
+import eu.cloudnetservice.modules.bridge.impl.platform.PlatformBridgeManagement;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.NonNull;
