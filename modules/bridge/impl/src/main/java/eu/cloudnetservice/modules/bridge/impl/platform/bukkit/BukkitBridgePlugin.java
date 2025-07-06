@@ -32,7 +32,8 @@ import org.bukkit.plugin.PluginManager;
   name = "CloudNet-Bridge",
   version = "@version@",
   description = "Bridges service software support between all supported versions for easy CloudNet plugin development",
-  authors = "CloudNetService"
+  authors = "CloudNetService",
+  foliaSupported = true
 )
 public final class BukkitBridgePlugin implements PlatformEntrypoint {
 

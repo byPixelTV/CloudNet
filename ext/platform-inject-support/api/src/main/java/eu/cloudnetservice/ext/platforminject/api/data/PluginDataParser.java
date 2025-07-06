@@ -71,6 +71,7 @@ public final class PluginDataParser {
     var api = normalizeValue(plugin.api());
     var homepage = normalizeValue(plugin.homepage());
     var desc = normalizeValue(plugin.description());
+    var foliaSupported = plugin.foliaSupported();
 
     // validate & convert arrays to collections
     List<String> authors = Arrays.stream(plugin.authors()).filter(s -> !s.isBlank()).distinct().toList();
@@ -91,6 +92,7 @@ public final class PluginDataParser {
         desc,
         homepage,
         listener,
+        foliaSupported,
         authors,
         commands,
         pluginFileNames,
@@ -124,6 +126,7 @@ public final class PluginDataParser {
       desc,
       homepage,
       listener,
+      foliaSupported,
       authors,
       commands,
       pluginFileNames,

@@ -40,6 +40,8 @@ public @interface PlatformPlugin {
 
   @NonNull String description() default "";
 
+  boolean foliaSupported() default false;
+
   @NonNull String homepage() default "";
 
   @NonNull String[] authors() default {};
