@@ -27,6 +27,7 @@ final class AdventureComponentFormat extends JavaEditionComponentFormat<Componen
 
   private static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
     .character(COLOR_CHAR)
+    .character(LEGACY_CHAR)
     .extractUrls()
     .hexColors()
     .build();

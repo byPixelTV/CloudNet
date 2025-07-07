@@ -22,7 +22,7 @@ import eu.cloudnetservice.driver.provider.CloudServiceProvider;
 import eu.cloudnetservice.driver.registry.Service;
 import eu.cloudnetservice.driver.service.ServiceEnvironmentType;
 import eu.cloudnetservice.driver.service.ServiceInfoSnapshot;
-import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.BridgeDocProperties;
 import eu.cloudnetservice.modules.bridge.impl.node.player.NodePlayerManager;
 import eu.cloudnetservice.modules.bridge.player.CloudOfflinePlayer;
@@ -41,6 +41,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotation.specifier.Quoted;
 import org.incendo.cloud.annotations.Argument;
@@ -212,7 +213,7 @@ public class PlayersCommand {
   ) {
     var reasonComponent = reason == null
       ? Component.empty()
-      : ComponentFormats.BUNGEE_TO_ADVENTURE.convert(reason);
+      : MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(reason));
     this.playerExecutor(player).kick(reasonComponent);
 
     source.sendMessage(i18n.translate("module-bridge-command-players-kick-player",
@@ -234,7 +235,7 @@ public class PlayersCommand {
     @NonNull @Argument("player") CloudPlayer player,
     @NonNull @Greedy @Argument("message") String message
   ) {
-    this.playerExecutor(player).sendChatMessage(ComponentFormats.BUNGEE_TO_ADVENTURE.convert(message));
+    this.playerExecutor(player).sendChatMessage(MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)));
     source.sendMessage(
       i18n.translate("module-bridge-command-players-send-player-message", player.name(), player.uniqueId()));
   }

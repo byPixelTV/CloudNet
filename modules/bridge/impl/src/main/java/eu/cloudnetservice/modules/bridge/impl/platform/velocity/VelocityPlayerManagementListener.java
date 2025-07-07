@@ -26,7 +26,7 @@ import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
-import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.impl.platform.PlatformBridgeManagement;
 import eu.cloudnetservice.modules.bridge.impl.platform.helper.ProxyPlatformHelper;
 import eu.cloudnetservice.modules.bridge.player.NetworkPlayerProxyInfo;
@@ -37,6 +37,7 @@ import jakarta.inject.Singleton;
 import java.util.Locale;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 @Singleton
 public final class VelocityPlayerManagementListener {
@@ -68,7 +69,7 @@ public final class VelocityPlayerManagementListener {
         this.management.configuration().handleMessage(
           Locale.ENGLISH,
           "proxy-join-cancel-because-maintenance",
-          ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+          message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
           component -> event.setResult(ResultedEvent.ComponentResult.denied(component)));
         return;
       }
@@ -79,7 +80,7 @@ public final class VelocityPlayerManagementListener {
         this.management.configuration().handleMessage(
           Locale.ENGLISH,
           "proxy-join-cancel-because-permission",
-          ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+          message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
           component -> event.setResult(ResultedEvent.ComponentResult.denied(component)));
         return;
       }
@@ -101,7 +102,7 @@ public final class VelocityPlayerManagementListener {
         var kickMessage = this.management.configuration().findMessage(
           event.getPlayer().getEffectiveLocale(),
           "proxy-join-disconnect-because-no-hub",
-          ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+          message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
           null,
           true);
         if (kickMessage != null) {
@@ -181,7 +182,7 @@ public final class VelocityPlayerManagementListener {
     var rawReasonMessage = this.management.configuration().findMessage(
       playerLocale,
       messageKey,
-      ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+      message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
       null,
       true);
     if (rawReasonMessage == null) {

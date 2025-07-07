@@ -16,7 +16,7 @@
 
 package eu.cloudnetservice.modules.bridge.impl.platform.minestom;
 
-import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.impl.platform.PlatformBridgeManagement;
 import eu.cloudnetservice.modules.bridge.impl.platform.helper.ServerPlatformHelper;
 import eu.cloudnetservice.modules.bridge.player.NetworkPlayerServerInfo;
@@ -24,6 +24,7 @@ import eu.cloudnetservice.wrapper.holder.ServiceInfoHolder;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.NonNull;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventFilter;
 import net.minestom.server.event.EventNode;
@@ -72,7 +73,7 @@ public final class MinestomPlayerManagementListener {
         this.management.configuration().handleMessage(
           player.getLocale(),
           "server-join-cancel-because-maintenance",
-          ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+          message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
           player::kick);
         return;
       }
@@ -82,7 +83,7 @@ public final class MinestomPlayerManagementListener {
         this.management.configuration().handleMessage(
           player.getLocale(),
           "server-join-cancel-because-permission",
-          ComponentFormats.BUNGEE_TO_ADVENTURE::convert,
+          message -> MiniMessage.miniMessage().deserialize(MinimessageConverter.convertToMinimessage(message)),
           player::kick);
       }
     }

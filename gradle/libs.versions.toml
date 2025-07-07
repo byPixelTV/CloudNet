@@ -184,6 +184,7 @@ adventureApi = { group = "net.kyori", name = "adventure-api", version.ref = "adv
 adventureSerializerGson = { group = "net.kyori", name = "adventure-text-serializer-gson", version.ref = "adventure" }
 adventureSerializerLegacy = { group = "net.kyori", name = "adventure-text-serializer-legacy", version.ref = "adventure" }
 adventureSerializerBungee = { group = "net.kyori", name = "adventure-text-serializer-bungeecord", version.ref = "adventure-serializer-bungee" }
+adventureSerializerMiniMessage = { group = "net.kyori", name = "adventure-text-minimessage", version.ref = "adventure" }
 
 # platform extensions
 modLauncher = { group = "cpw.mods", name = "modlauncher", version.ref = "modlauncher" }
@@ -218,7 +219,7 @@ junit = ["junitApi", "junitParams", "junitEngine"]
 dockerJava = ["dockerJavaApi", "dockerJavaHttpclient5"]
 testContainers = ["testContainers", "testContainersJunit"]
 nightConfig = ["nightConfigToml", "nightConfigYaml", "nightConfigJson"]
-adventure = ["adventureApi", "adventureSerializerGson", "adventureSerializerLegacy"]
+adventure = ["adventureApi", "adventureSerializerGson", "adventureSerializerLegacy", "adventureSerializerMiniMessage"]
 
 proxyPlatform = ["bungeecord", "velocity", "waterdogpe"]
 serverPlatform = ["spigot", "sponge", "nukkitX", "minestom", "minestomExtensions", "limboloohp"]

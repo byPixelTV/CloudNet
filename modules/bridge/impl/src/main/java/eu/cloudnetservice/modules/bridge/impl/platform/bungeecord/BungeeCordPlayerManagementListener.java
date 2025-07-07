@@ -22,6 +22,7 @@ import dev.derklaro.reflexion.MethodAccessor;
 import dev.derklaro.reflexion.Reflexion;
 import eu.cloudnetservice.ext.bungee.BungeeComponentUtil;
 import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.modules.bridge.impl.platform.PlatformBridgeManagement;
 import eu.cloudnetservice.modules.bridge.impl.platform.helper.ProxyPlatformHelper;
 import eu.cloudnetservice.modules.bridge.player.NetworkPlayerProxyInfo;
@@ -105,8 +106,9 @@ public final class BungeeCordPlayerManagementListener implements Listener {
           this.management.configuration().handleMessage(
             player.getLocale(),
             "proxy-join-cancel-because-maintenance",
-            ComponentFormats.ADVENTURE_TO_BUNGEE::convert,
-            player::disconnect);
+            MinimessageConverter::convertMinimessageStringToBungee,
+            player::disconnect
+          );
           return;
         }
 
@@ -269,7 +271,7 @@ public final class BungeeCordPlayerManagementListener implements Listener {
     var rawReasonMessage = this.management.configuration().findMessage(
       player.getLocale(),
       messageKey,
-      ComponentFormats.ADVENTURE_TO_BUNGEE::convert,
+      MinimessageConverter::convertMinimessageStringToBungee,
       null,
       true);
     if (rawReasonMessage == null) {

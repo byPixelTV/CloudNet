@@ -24,6 +24,7 @@ import eu.cloudnetservice.driver.network.NetworkClient;
 import eu.cloudnetservice.driver.network.rpc.factory.RPCFactory;
 import eu.cloudnetservice.driver.provider.CloudServiceProvider;
 import eu.cloudnetservice.ext.component.ComponentFormats;
+import eu.cloudnetservice.ext.minimessage.MinimessageConverter;
 import eu.cloudnetservice.ext.platforminject.api.stereotype.ProvidesFor;
 import eu.cloudnetservice.modules.syncproxy.SyncProxyManagement;
 import eu.cloudnetservice.modules.syncproxy.impl.platform.PlatformSyncProxyManagement;
@@ -36,6 +37,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.NonNull;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.Nullable;
 
 @Singleton
@@ -101,13 +103,21 @@ public final class VelocitySyncProxyManagement extends PlatformSyncProxyManageme
 
   @Override
   public void disconnectPlayer(@NonNull Player player, @NonNull String message) {
-    player.disconnect(ComponentFormats.BUNGEE_TO_ADVENTURE.convert(message));
+    player.disconnect(
+      MiniMessage.miniMessage().deserialize(
+        MinimessageConverter.convertToMinimessage(message)
+      )
+    );
   }
 
   @Override
   public void messagePlayer(@NonNull Player player, @Nullable String message) {
     if (message != null) {
-      player.sendMessage(ComponentFormats.BUNGEE_TO_ADVENTURE.convert(message));
+      player.sendMessage(
+        MiniMessage.miniMessage().deserialize(
+          MinimessageConverter.convertToMinimessage(message)
+        )
+      );
     }
   }
 
