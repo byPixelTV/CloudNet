@@ -66,7 +66,7 @@ public final class BukkitBridgePlugin implements PlatformEntrypoint {
     // init the bridge management
     this.bridgeManagement.registerServices(this.serviceRegistry);
 
-    this.plugin.getServer().getScheduler().runTask(this.plugin, this.bridgeManagement::postInit);
+    this.bridgeManagement.postInit();
     // register the bukkit listener
     this.pluginManager.registerEvents(this.playerListener, this.plugin);
   }
