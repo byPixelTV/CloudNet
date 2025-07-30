@@ -21,7 +21,6 @@ import eu.cloudnetservice.driver.event.EventListener;
 import eu.cloudnetservice.driver.event.EventManager;
 import eu.cloudnetservice.driver.event.events.channel.ChannelMessageReceiveEvent;
 import eu.cloudnetservice.driver.network.buffer.DataBuf;
-import eu.cloudnetservice.ext.component.ComponentFormats;
 import eu.cloudnetservice.modules.bridge.BridgeManagement;
 import eu.cloudnetservice.modules.bridge.event.BridgeDeleteCloudOfflinePlayerEvent;
 import eu.cloudnetservice.modules.bridge.event.BridgeProxyPlayerDisconnectEvent;
@@ -39,9 +38,7 @@ import eu.cloudnetservice.modules.bridge.player.NetworkPlayerProxyInfo;
 import eu.cloudnetservice.modules.bridge.player.NetworkPlayerServerInfo;
 import eu.cloudnetservice.modules.bridge.player.NetworkServiceInfo;
 import jakarta.inject.Singleton;
-import java.util.Locale;
 import lombok.NonNull;
-import net.kyori.adventure.text.Component;
 
 @Singleton
 public final class NodePlayerChannelMessageListener {
@@ -50,8 +47,7 @@ public final class NodePlayerChannelMessageListener {
   public void handle(
     @NonNull ChannelMessageReceiveEvent event,
     @NonNull EventManager eventManager,
-    @NonNull NodePlayerManager playerManager,
-    @NonNull BridgeManagement bridgeManagement
+    @NonNull NodePlayerManager playerManager
   ) {
     if (event.channel().equals(BridgeManagement.BRIDGE_PLAYER_CHANNEL_NAME)) {
       // a message regarding a player event
@@ -62,18 +58,7 @@ public final class NodePlayerChannelMessageListener {
           var info = event.content().readObject(NetworkPlayerProxyInfo.class);
           // create the event
           var preLoginEvent = new LocalPlayerPreLoginEvent(info);
-          // set the event cancelled by default if the player is already connected
-          if (playerManager.onlinePlayer(info.uniqueId()) != null) {
-            preLoginEvent.result(bridgeManagement.configuration().findMessage(
-              Locale.ENGLISH,
-              "already-connected",
-              message -> {
-                var component = ComponentFormats.BUNGEE_TO_ADVENTURE.convert(message);
-                return LocalPlayerPreLoginEvent.Result.denied(component);
-              },
-              LocalPlayerPreLoginEvent.Result.denied(Component.empty()),
-              true));
-          }
+
           // publish the event
           var result = eventManager.callEvent(preLoginEvent).result();
           event.binaryResponse(DataBuf.empty().writeObject(result));
