@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-dependencies {
-  "compileOnly"(libs.adventureApi)
-  "compileOnly"(libs.adventureSerializerLegacy)
-  "compileOnly"(libs.bungeecordChat)
-  "compileOnly"(libs.adventureSerializerBungee)
-  "compileOnly"(libs.adventureSerializerMiniMessage)
+plugins {
+  id("cloudnet-java")
+  id("cloudnet-publish")
 }
 
-configurations {
-  named("testImplementation").get().extendsFrom(named("compileOnly").get())
+dependencies {
+  compileOnly(libs.adventureApi)
+  compileOnly(libs.adventureSerializerLegacy)
+  compileOnly(libs.bungeecordChat)
+  compileOnly(libs.adventureSerializerBungee)
+  compileOnly(libs.adventureSerializerMiniMessage)
 }
