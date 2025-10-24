@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 CloudNetService team & contributors
+ * Copyright 2019-present CloudNetService team & contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public final class NodeNPCManagement extends AbstractNPCManagement {
   private static final Path PROTOCOL_LIB_CACHE_PATH = FileUtil.TEMP_DIR.resolve("caches/ProtocolLib.jar");
   private static final String PROTOCOL_LIB_DOWNLOAD_URL = System.getProperty(
     "cloudnet.protocollib.download",
-    "https://ci.dmulloy2.net/job/ProtocolLib/lastSuccessfulBuild/artifact/build/libs/ProtocolLib.jar");
+    "https://github.com/dmulloy2/ProtocolLib/releases/download/dev-build/ProtocolLib.jar");
 
   private final Database database;
   private final Path configurationPath;

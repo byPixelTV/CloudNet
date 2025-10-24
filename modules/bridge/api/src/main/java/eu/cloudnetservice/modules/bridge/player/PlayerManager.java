@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 CloudNetService team & contributors
+ * Copyright 2019-present CloudNetService team & contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -271,7 +271,7 @@ public interface PlayerManager {
    * @throws NullPointerException if the given unique id is null.
    */
   @NonNull
-  CompletableFuture<CloudPlayer> onlinePlayersAsync(@NonNull UUID uniqueId);
+  CompletableFuture<CloudPlayer> onlinePlayerAsync(@NonNull UUID uniqueId);
 
   /**
    * Gets the first cloud player that is online and has the given case-insensitive name asynchronously.

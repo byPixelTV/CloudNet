@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2025 CloudNetService team & contributors
+ * Copyright 2019-present CloudNetService team & contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ import org.gradle.kotlin.dsl.withType
 /**
  * Java version compatibility to apply to all non-api projects.
  */
-val JAVA_CORE_COMPATIBILITY = JavaLanguageVersion.of(24)
+val JAVA_CORE_COMPATIBILITY = JavaLanguageVersion.of(25)
 
 class CloudNetJavaPlugin : Plugin<Project> {
   override fun apply(project: Project) {

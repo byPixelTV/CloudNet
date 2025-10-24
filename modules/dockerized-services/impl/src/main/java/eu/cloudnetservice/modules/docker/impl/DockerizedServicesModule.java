@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 CloudNetService team & contributors
+ * Copyright 2019-present CloudNetService team & contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class DockerizedServicesModule extends DriverModule {
       () -> new DockerConfiguration(
         "docker-jvm",
         "host",
-        DockerImage.builder().repository("azul/zulu-openjdk").tag("24-jre-headless").build(),
+        DockerImage.builder().repository("azul/zulu-openjdk-alpine").tag("25-jre-headless-latest").build(),
         Set.of(),
         Set.of(),
         Set.of(),
