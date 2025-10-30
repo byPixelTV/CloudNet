@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 CloudNetService team & contributors
+ * Copyright 2019-present CloudNetService team & contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import net.fabricmc.loader.api.FabricLoader;
   dependencies = {
     @Dependency(name = "fabricloader", version = ">=0.17.0"),
     @Dependency(name = "minecraft", version = "*"),
-    @Dependency(name = "java", version = "24")
+    @Dependency(name = "java", version = "25")
   },
   authors = "CloudNetService",
   pluginFileNames = "fabric.mod.json.temp"

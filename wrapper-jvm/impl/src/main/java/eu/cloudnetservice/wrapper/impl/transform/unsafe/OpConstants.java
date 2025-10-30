@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 CloudNetService team & contributors
+ * Copyright 2019-present CloudNetService team & contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,7 @@ final class OpConstants {
   /**
    * Supplier of the jvm-static trusted lookup instance, only initialized on the first access.
    */
-  @SuppressWarnings("deprecation") // fine until stable values are available
-  static final Supplier<MethodHandles.Lookup> TRUSTED_LOOKUP = new LazyMemoizingSupplier<>(() -> {
+  static final Supplier<MethodHandles.Lookup> TRUSTED_LOOKUP = StableValue.supplier(() -> {
     try {
       var trustedLookupField = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
       trustedLookupField.setAccessible(true);

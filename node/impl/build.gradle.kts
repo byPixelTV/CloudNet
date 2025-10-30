@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 CloudNetService team & contributors
+ * Copyright 2019-present CloudNetService team & contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,6 +88,7 @@ dependencies {
   implementation(libs.bundles.jline)
   implementation(libs.bundles.cloud)
   implementation(libs.bundles.unirest)
+  implementation(libs.bundles.aerogel)
   implementation(libs.stringSimilarity)
   implementation(libs.bundles.nightConfig)
 

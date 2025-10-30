@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 CloudNetService team & contributors
+ * Copyright 2019-present CloudNetService team & contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,15 +124,6 @@ public class DefaultConfigSetup extends DefaultClusterSetup {
         .answerType(QuestionAnswerType.<HostAndPort>builder()
           .recommendation(NetworkUtil.localAddress() + ":1410")
           .possibleResults(addresses.stream().map(addr -> addr + ":1410").toList())
-          .parser(this.parsers.assignableHostAndPort(true)))
-        .build(),
-      // web server host
-      QuestionListEntry.<HostAndPort>builder()
-        .key("webHost")
-        .translatedQuestion("cloudnet-init-setup-web-host")
-        .answerType(QuestionAnswerType.<HostAndPort>builder()
-          .recommendation(NetworkUtil.localAddress() + ":2812")
-          .possibleResults(addresses.stream().map(addr -> addr + ":2812").toList())
           .parser(this.parsers.assignableHostAndPort(true)))
         .build(),
       // service bind host address

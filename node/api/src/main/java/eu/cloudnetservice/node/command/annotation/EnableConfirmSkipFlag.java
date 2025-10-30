@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 CloudNetService team & contributors
+ * Copyright 2019-present CloudNetService team & contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,11 @@ import java.lang.annotation.Target;
 import lombok.NonNull;
 
 /**
- * This annotation allows users to skip the required confirmation
- * {@link org.incendo.cloud.processors.confirmation.annotation.Confirmation} of a command. When this annotation is
- * applied to a method a flag is implicitly appended to the command which can be used to skip the confirmation.
+ * This annotation allows users to skip the required confirmation of a command. When this annotation is applied to a
+ * method a flag is implicitly appended to the command which can be used to skip the confirmation.
  * <p>
  * The annotations value is used as the flag name, which defaults to {@code confirm}.
  *
- * @see org.incendo.cloud.processors.confirmation.annotation.Confirmation
  * @since 4.0
  */
 @Documented

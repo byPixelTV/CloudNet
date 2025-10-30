@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 CloudNetService team & contributors
+ * Copyright 2019-present CloudNetService team & contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -289,7 +289,7 @@ public class NodePlayerManager implements PlayerManager {
   }
 
   @Override
-  public @NonNull CompletableFuture<CloudPlayer> onlinePlayersAsync(@NonNull UUID uniqueId) {
+  public @NonNull CompletableFuture<CloudPlayer> onlinePlayerAsync(@NonNull UUID uniqueId) {
     return TaskUtil.supplyAsync(() -> this.onlinePlayer(uniqueId));
   }
 
