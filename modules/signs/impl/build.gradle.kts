@@ -65,7 +65,7 @@ tasks.withType<JavaCompile>().configureEach {
 tasks.shadowJar.configure {
   archiveFileName = Files.signs
 
-  relocate("com.github.Anon8281.universalScheduler", "eu.cloudnetservice.modules.npc.relocate.com.github.anon8281.universalScheduler")
+  relocate("com.github.Anon8281.universalScheduler", "eu.cloudnetservice.modules.signs.relocate.com.github.anon8281.universalScheduler")
 
   manifest {
     attributes["paperweight-mappings-namespace"] = "mojang"

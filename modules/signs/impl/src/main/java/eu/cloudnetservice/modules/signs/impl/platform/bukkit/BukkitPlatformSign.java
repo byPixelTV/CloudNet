@@ -23,6 +23,7 @@ import eu.cloudnetservice.modules.signs.configuration.SignLayout;
 import eu.cloudnetservice.modules.signs.impl.platform.PlatformSign;
 import eu.cloudnetservice.modules.signs.impl.platform.bukkit.event.BukkitCloudSignInteractEvent;
 import eu.cloudnetservice.utils.base.StringUtil;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.NonNull;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -40,15 +41,19 @@ final class BukkitPlatformSign extends PlatformSign<Player, String> {
   private final Server server;
   private final PluginManager pluginManager;
 
+  private final BukkitSignManagement management;
+
   public BukkitPlatformSign(
     @NonNull Sign base,
     @NonNull Server server,
     @NonNull PluginManager pluginManager,
-    @NonNull ServiceRegistry serviceRegistry
+    @NonNull ServiceRegistry serviceRegistry,
+    @NonNull BukkitSignManagement management
   ) {
     super(base, serviceRegistry, input -> ChatColor.translateAlternateColorCodes('&', input));
     this.server = server;
     this.pluginManager = pluginManager;
+    this.management = management;
   }
 
   @Override
@@ -59,11 +64,19 @@ final class BukkitPlatformSign extends PlatformSign<Player, String> {
       return false;
     }
 
-    // checks if the type of the block at the sign location is a sign. The material name check is not the safest way
-    // of doing that, but the safe way would be to use "getBlockState" which always captures a new state of the block
-    // and is extremely heavy when executed often, so this way is much more lightweight for that task
-    var type = location.getBlock().getType();
-    return type.name().contains("SIGN");
+    var result = new AtomicBoolean(false);
+
+    this.management.scheduler.runTask(location, () -> {
+      // checks if the type of the block at the sign location is a sign. The material name check is not the safest way
+      // of doing that, but the safe way would be to use "getBlockState" which always captures a new state of the block
+      // and is extremely heavy when executed often, so this way is much more lightweight for that task
+      var type = location.getBlock().getType();
+      result.set(type.name().contains("SIGN"));
+    });
+
+    // using atomic boolean to transfer the result from the runnable. this will block until the task is executed on main. this is a workaround for folia
+    // sadly in java you cannot return in a lambda directly, so we have to use this way. it is not pretty, but it works
+    return result.get();
   }
 
   @Override
@@ -83,38 +96,40 @@ final class BukkitPlatformSign extends PlatformSign<Player, String> {
   @Override
   @SuppressWarnings("deprecation")
   public void updateSign(@NonNull SignLayout layout) {
-    // check if the location associated with the sign is available
+    // check if the location associated with the sign is
     var location = this.signLocation();
-    if (location == null) {
-      return;
-    }
+    this.management.scheduler.runTask(location, () -> {
+      if (location == null) {
+        return;
+      }
 
-    var state = location.getBlock().getState();
-    if (state instanceof org.bukkit.block.Sign sign) {
-      // set the text color and glowing state
-      BukkitCompatibility.signGlowing(sign, layout);
-      BukkitCompatibility.signTextColor(sign, layout);
+      var state = location.getBlock().getState();
+      if (state instanceof org.bukkit.block.Sign sign) {
+        // set the text color and glowing state
+        BukkitCompatibility.signGlowing(sign, layout);
+        BukkitCompatibility.signTextColor(sign, layout);
 
-      // set the sign lines
-      this.changeSignLines(layout, (line, text) -> BukkitCompatibility.signLine(sign, line, text));
-      sign.update();
+        // set the sign lines
+        this.changeSignLines(layout, (line, text) -> BukkitCompatibility.signLine(sign, line, text));
+        sign.update();
 
-      // change the block behind the sign
-      var material = Material.getMaterial(StringUtil.toUpper(layout.blockMaterial()));
-      if (material != null && material.isBlock()) {
-        var facing = BukkitCompatibility.facing(sign);
-        if (facing != null) {
-          // set the type of the block behind the sign
-          var behind = state.getBlock().getRelative(facing.getOppositeFace());
-          behind.setType(material);
+        // change the block behind the sign
+        var material = Material.getMaterial(StringUtil.toUpper(layout.blockMaterial()));
+        if (material != null && material.isBlock()) {
+          var facing = BukkitCompatibility.facing(sign);
+          if (facing != null) {
+            // set the type of the block behind the sign
+            var behind = state.getBlock().getRelative(facing.getOppositeFace());
+            behind.setType(material);
 
-          // set the block sub id if needed
-          if (layout.blockSubId() >= 0) {
-            behind.setData((byte) layout.blockSubId());
+            // set the block sub id if needed
+            if (layout.blockSubId() >= 0) {
+              behind.setData((byte) layout.blockSubId());
+            }
           }
         }
       }
-    }
+    });
   }
 
   @Override
