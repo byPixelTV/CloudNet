@@ -16,6 +16,7 @@
 
 package eu.cloudnetservice.modules.npc.impl.platform.bukkit.entity;
 
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import com.github.juliarn.npclib.api.Npc;
 import com.github.juliarn.npclib.api.Platform;
 import com.github.juliarn.npclib.api.flag.NpcFlag;
@@ -36,7 +37,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.Scoreboard;
 
 public class NPCBukkitPlatformSelector extends BukkitPlatformSelectorEntity {
@@ -52,7 +52,7 @@ public class NPCBukkitPlatformSelector extends BukkitPlatformSelectorEntity {
     @NonNull NPC npc,
     @NonNull Plugin plugin,
     @NonNull Server server,
-    @NonNull BukkitScheduler scheduler,
+    @NonNull TaskScheduler scheduler,
     @NonNull PlayerManager playerManager,
     @NonNull BukkitPlatformNPCManagement npcManagement,
     @NonNull Platform<World, Player, ItemStack, Plugin> platform

@@ -36,6 +36,11 @@ repositories {
   }
   maven("https://repo.papermc.io/repository/maven-public/")
   maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+  maven("https://jitpack.io") {
+    mavenContent {
+      includeGroup("com.github.Anon8281")
+    }
+  }
 }
 
 dependencies {
@@ -51,6 +56,7 @@ dependencies {
 
   implementation(libs.packetEvents)
   implementation(projects.ext.bukkitCommand)
+  implementation(libs.universalScheduler)
 
   api(libs.bundles.npcLib)
   api(projects.modules.npcs.npcsApi)
@@ -68,6 +74,7 @@ tasks.shadowJar.configure {
   relocate("io.github.retrooper", "eu.cloudnetservice.modules.npc.relocate.io.packetevents")
   relocate("com.github.retrooper", "eu.cloudnetservice.modules.npc.relocate.com.packetevents")
   relocate("com.github.juliarn.npclib", "eu.cloudnetservice.modules.npc.relocate.com.github.juliarn.npclib")
+  relocate("com.github.Anon8281.universalScheduler", "eu.cloudnetservice.modules.npc.relocate.com.github.anon8281.universalScheduler")
 
   dependencies {
     exclude("plugin.yml")

@@ -76,6 +76,7 @@ placeholderApi = "2.11.6"
 adventure-serializer-bungee = "4.4.1"
 luckPermsApi = "5.5"
 fabricLoader = "0.17.3"
+universalScheduler = "0.1.7"
 
 
 [libraries]
@@ -190,6 +191,7 @@ packetEvents = { group = "com.github.retrooper", name = "packetevents-spigot", v
 npcLibLabymod = { group = "io.github.juliarn", name = "npc-lib-labymod", version.ref = "npcLib" }
 luckPermsApi = { group = "net.luckperms", name = "api", version.ref = "luckPermsApi" }
 fabricLoader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabricLoader" }
+universalScheduler = { group = "com.github.Anon8281", name = "UniversalScheduler", version.ref = "universalScheduler" }
 
 # dummy versions, just here for renovate to detect that there is something to update
 checkstyleTools = { group = "com.puppycrawl.tools", name = "checkstyle", version.ref = "checkstyleTools" }

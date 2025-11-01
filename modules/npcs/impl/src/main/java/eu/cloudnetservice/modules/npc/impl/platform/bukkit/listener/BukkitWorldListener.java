@@ -27,25 +27,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldSaveEvent;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.NumberConversions;
 
 @Singleton
 public final class BukkitWorldListener implements Listener {
 
-  private final Plugin plugin;
-  private final BukkitScheduler scheduler;
   private final BukkitPlatformNPCManagement management;
 
   @Inject
   public BukkitWorldListener(
-    @NonNull Plugin plugin,
-    @NonNull BukkitScheduler scheduler,
     @NonNull BukkitPlatformNPCManagement management
   ) {
-    this.plugin = plugin;
-    this.scheduler = scheduler;
     this.management = management;
   }
 
@@ -89,6 +81,6 @@ public final class BukkitWorldListener implements Listener {
     // remove all mobs
     entities.forEach(PlatformSelectorEntity::remove);
     // re-spawn all entities after 2 seconds - just hope the world save is done
-    this.scheduler.runTaskLater(this.plugin, () -> entities.forEach(PlatformSelectorEntity::spawn), 2 * 20);
+    this.management.scheduler().runTaskLater(() -> entities.forEach(PlatformSelectorEntity::spawn), 2 * 20);
   }
 }

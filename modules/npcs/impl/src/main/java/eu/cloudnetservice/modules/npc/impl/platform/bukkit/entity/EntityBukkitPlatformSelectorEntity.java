@@ -16,6 +16,7 @@
 
 package eu.cloudnetservice.modules.npc.impl.platform.bukkit.entity;
 
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import dev.derklaro.reflexion.MethodAccessor;
 import dev.derklaro.reflexion.Reflexion;
 import eu.cloudnetservice.modules.bridge.player.PlayerManager;
@@ -35,7 +36,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitScheduler;
 
 public class EntityBukkitPlatformSelectorEntity extends BukkitPlatformSelectorEntity {
 
@@ -113,7 +113,7 @@ public class EntityBukkitPlatformSelectorEntity extends BukkitPlatformSelectorEn
     @NonNull NPC npc,
     @NonNull Plugin plugin,
     @NonNull Server server,
-    @NonNull BukkitScheduler scheduler,
+    @NonNull TaskScheduler scheduler,
     @NonNull PlayerManager playerManager,
     @NonNull BukkitPlatformNPCManagement npcManagement
   ) {
