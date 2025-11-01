@@ -50,8 +50,7 @@ import org.bukkit.plugin.java.JavaPlugin;
     aliases = "cloudnpc",
     permission = "cloudnet.command.cloudnpc",
     description = "Root command to manage the CloudNet NPC system"
-  ),
-  foliaSupported = true
+  )
 )
 public final class BukkitNPCPlugin implements PlatformEntrypoint {
 
