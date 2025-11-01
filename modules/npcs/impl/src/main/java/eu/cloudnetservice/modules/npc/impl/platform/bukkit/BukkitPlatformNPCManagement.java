@@ -139,41 +139,43 @@ public class BukkitPlatformNPCManagement extends
           for (var value : this.trackedEntities.values()) {
             if (value.spawned()) {
               // select all nearby entities of each spawned mob
-              var nearbyEntities = value.location().getWorld().getNearbyEntities(
-                value.location(),
-                distance,
-                distance,
-                distance);
-              // loop over all entities and knock them back
-              if (!nearbyEntities.isEmpty()) {
-                for (var entity : nearbyEntities) {
-                  // check if the entity is a player
-                  if (entity instanceof Player player && !entity.hasPermission("cloudnet.npcs.knockback.bypass")) {
-                    // apply the strength to the curren vector
-                    var vector = player.getLocation().toVector().subtract(value.location().toVector())
-                      .normalize()
-                      .multiply(strength)
-                      .setY(0.2);
-                    if (NumberConversions.isFinite(vector.getX()) && NumberConversions.isFinite(vector.getZ())) {
-                      // apply the velocity
-                      player.setVelocity(vector);
-                      // check if we should send a labymod emote
-                      if (value instanceof NPCBukkitPlatformSelector npcSelector) {
-                        if (emoteId == -1) {
-                          var emote = labyModEmotes[ThreadLocalRandom.current().nextInt(0, labyModEmotes.length)];
-                          LabyModExtension
-                            .createEmotePacket(this.npcPlatform.packetFactory(), emote)
-                            .schedule(player, npcSelector.handleNPC());
-                        } else {
-                          LabyModExtension
-                            .createEmotePacket(this.npcPlatform.packetFactory(), emoteId)
-                            .schedule(player, npcSelector.handleNPC());
+              this.scheduler.runTask(value.location(), () -> {
+                var nearbyEntities = value.location().getWorld().getNearbyEntities(
+                  value.location(),
+                  distance,
+                  distance,
+                  distance);
+                // loop over all entities and knock them back
+                if (!nearbyEntities.isEmpty()) {
+                  for (var entity : nearbyEntities) {
+                    // check if the entity is a player
+                    if (entity instanceof Player player && !entity.hasPermission("cloudnet.npcs.knockback.bypass")) {
+                      // apply the strength to the curren vector
+                      var vector = player.getLocation().toVector().subtract(value.location().toVector())
+                        .normalize()
+                        .multiply(strength)
+                        .setY(0.2);
+                      if (NumberConversions.isFinite(vector.getX()) && NumberConversions.isFinite(vector.getZ())) {
+                        // apply the velocity
+                        player.setVelocity(vector);
+                        // check if we should send a labymod emote
+                        if (value instanceof NPCBukkitPlatformSelector npcSelector) {
+                          if (emoteId == -1) {
+                            var emote = labyModEmotes[ThreadLocalRandom.current().nextInt(0, labyModEmotes.length)];
+                            LabyModExtension
+                              .createEmotePacket(this.npcPlatform.packetFactory(), emote)
+                              .schedule(player, npcSelector.handleNPC());
+                          } else {
+                            LabyModExtension
+                              .createEmotePacket(this.npcPlatform.packetFactory(), emoteId)
+                              .schedule(player, npcSelector.handleNPC());
+                          }
                         }
                       }
                     }
                   }
                 }
-              }
+              });
             }
           }
         }
