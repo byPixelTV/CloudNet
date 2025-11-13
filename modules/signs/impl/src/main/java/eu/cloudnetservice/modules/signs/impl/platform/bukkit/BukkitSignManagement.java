@@ -16,6 +16,8 @@
 
 package eu.cloudnetservice.modules.signs.impl.platform.bukkit;
 
+import com.github.Anon8281.universalScheduler.UniversalScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import eu.cloudnetservice.driver.event.EventManager;
 import eu.cloudnetservice.driver.provider.CloudServiceProvider;
 import eu.cloudnetservice.driver.registry.ServiceRegistry;
@@ -37,7 +39,6 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.Nullable;
 
 @Singleton
@@ -51,13 +52,12 @@ public class BukkitSignManagement extends PlatformSignManagement<Player, Locatio
   protected final Plugin plugin;
   protected final PluginManager pluginManager;
   protected final ServiceRegistry serviceRegistry;
-  protected final BukkitScheduler scheduler;
+  protected final TaskScheduler scheduler;
 
   @Inject
   protected BukkitSignManagement(
     @NonNull Plugin plugin,
     @NonNull Server server,
-    @NonNull BukkitScheduler scheduler,
     @NonNull EventManager eventManager,
     @NonNull PluginManager pluginManager,
     @NonNull ServiceRegistry serviceRegistry,
@@ -65,6 +65,9 @@ public class BukkitSignManagement extends PlatformSignManagement<Player, Locatio
     @NonNull CloudServiceProvider serviceProvider,
     @NonNull @Named("taskScheduler") ScheduledExecutorService executorService
   ) {
+    // we need a local scheduler to run tasks on the main thread in super calls
+    final TaskScheduler schedulerLocal = UniversalScheduler.getScheduler(plugin);
+
     super(eventManager, runnable -> {
       // only schedule tasks if the plugin is enabled, bukkit does not allow scheduling while disabled
       if (plugin.isEnabled()) {
@@ -72,13 +75,14 @@ public class BukkitSignManagement extends PlatformSignManagement<Player, Locatio
         if (server.isPrimaryThread()) {
           runnable.run();
         } else {
-          scheduler.runTask(plugin, runnable);
+          schedulerLocal.runTask(runnable);
         }
       }
     }, wrapperConfig, serviceProvider, executorService);
 
+    this.scheduler = schedulerLocal;
+
     this.plugin = plugin;
-    this.scheduler = scheduler;
     this.pluginManager = pluginManager;
     this.serviceRegistry = serviceRegistry;
   }
@@ -90,7 +94,7 @@ public class BukkitSignManagement extends PlatformSignManagement<Player, Locatio
 
   @Override
   protected void startKnockbackTask() {
-    this.scheduler.runTaskTimer(this.plugin, () -> {
+    this.scheduler.runTaskTimer(() -> {
       var entry = this.applicableSignConfigurationEntry();
       if (entry != null) {
         var conf = entry.knockbackConfiguration();
@@ -139,6 +143,6 @@ public class BukkitSignManagement extends PlatformSignManagement<Player, Locatio
 
   @Override
   protected @NonNull PlatformSign<Player, String> createPlatformSign(@NonNull Sign base) {
-    return new BukkitPlatformSign(base, this.plugin.getServer(), this.pluginManager, this.serviceRegistry);
+    return new BukkitPlatformSign(base, this.plugin.getServer(), this.pluginManager, this.serviceRegistry, this);
   }
 }

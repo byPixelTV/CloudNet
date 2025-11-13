@@ -46,8 +46,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.Nullable;
 
 @Singleton
@@ -55,18 +53,12 @@ public final class BukkitFunctionalityListener implements Listener {
 
   private static final ItemSlot[] ITEM_SLOTS = ItemSlot.values();
 
-  private final Plugin plugin;
-  private final BukkitScheduler scheduler;
   private final BukkitPlatformNPCManagement management;
 
   @Inject
   public BukkitFunctionalityListener(
-    @NonNull Plugin plugin,
-    @NonNull BukkitScheduler scheduler,
     @NonNull BukkitPlatformNPCManagement management
   ) {
-    this.plugin = plugin;
-    this.scheduler = scheduler;
     this.management = management;
 
     var bus = management.npcPlatform().eventManager();
@@ -108,15 +100,13 @@ public final class BukkitFunctionalityListener implements Listener {
   }
 
   public void handleNpcAttack(@NonNull AttackNpcEvent event) {
-    this.scheduler.runTask(
-      this.plugin,
+    this.management.scheduler().runTask(
       () -> this.handleClick(event.player(), null, event.npc().entityId(), true, false));
   }
 
   public void handleNpcInteract(@NonNull InteractNpcEvent event) {
     if (event.hand() == InteractNpcEvent.Hand.MAIN_HAND) {
-      this.scheduler.runTask(
-        this.plugin,
+      this.management.scheduler().runTask(
         () -> this.handleClick(event.player(), null, event.npc().entityId(), false, false));
     }
   }

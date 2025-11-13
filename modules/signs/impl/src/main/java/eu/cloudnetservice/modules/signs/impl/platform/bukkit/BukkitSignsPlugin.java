@@ -36,6 +36,7 @@ import org.bukkit.plugin.java.JavaPlugin;
   platform = "bukkit",
   name = "CloudNet-Signs",
   version = "@version@",
+  foliaSupported = true,
   description = "Bukkit extension for the CloudNet runtime which adds sign connector support",
   authors = "CloudNetService",
   dependencies = @Dependency(name = "CloudNet-Bridge"),

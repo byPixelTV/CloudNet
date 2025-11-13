@@ -16,6 +16,9 @@
 
 package eu.cloudnetservice.modules.npc.impl.platform.bukkit;
 
+import com.github.Anon8281.universalScheduler.UniversalScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
 import com.github.juliarn.npclib.api.NpcActionController;
 import com.github.juliarn.npclib.api.Platform;
 import com.github.juliarn.npclib.api.protocol.PlatformPacketAdapter;
@@ -57,8 +60,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.NumberConversions;
 
@@ -74,19 +75,18 @@ public class BukkitPlatformNPCManagement extends
 
   protected final Plugin plugin;
   protected final Server server;
-  protected final BukkitScheduler scheduler;
+  protected final TaskScheduler scheduler;
   protected final PlayerManager playerManager;
 
   protected final Platform<World, Player, ItemStack, Plugin> npcPlatform;
-  protected final BukkitTask knockBackTask;
+  protected final MyScheduledTask knockBackTask;
 
-  protected volatile BukkitTask npcEmoteTask;
+  protected volatile MyScheduledTask npcEmoteTask;
 
   @Inject
   public BukkitPlatformNPCManagement(
     @NonNull Plugin plugin,
     @NonNull Server server,
-    @NonNull BukkitScheduler scheduler,
     @NonNull EventManager eventManager,
     @NonNull ComponentInfo componentInfo,
     @NonNull @Service PlayerManager playerManager,
@@ -97,8 +97,10 @@ public class BukkitPlatformNPCManagement extends
 
     this.plugin = plugin;
     this.server = server;
-    this.scheduler = scheduler;
     this.playerManager = playerManager;
+
+    // scheduler init
+    this.scheduler = UniversalScheduler.getScheduler(plugin);
 
     // npc pool init
     var entry = this.applicableNPCConfigurationEntry();
@@ -123,7 +125,7 @@ public class BukkitPlatformNPCManagement extends
     // start the emote player
     this.startEmoteTask(false);
     // start the knock back task
-    this.knockBackTask = this.scheduler.runTaskTimer(plugin, () -> {
+    this.knockBackTask = this.scheduler.runTaskTimer(() -> {
       var configEntry = this.applicableNPCConfigurationEntry();
       if (configEntry != null) {
         // check if knock back is enabled
@@ -137,41 +139,43 @@ public class BukkitPlatformNPCManagement extends
           for (var value : this.trackedEntities.values()) {
             if (value.spawned()) {
               // select all nearby entities of each spawned mob
-              var nearbyEntities = value.location().getWorld().getNearbyEntities(
-                value.location(),
-                distance,
-                distance,
-                distance);
-              // loop over all entities and knock them back
-              if (!nearbyEntities.isEmpty()) {
-                for (var entity : nearbyEntities) {
-                  // check if the entity is a player
-                  if (entity instanceof Player player && !entity.hasPermission("cloudnet.npcs.knockback.bypass")) {
-                    // apply the strength to the curren vector
-                    var vector = player.getLocation().toVector().subtract(value.location().toVector())
-                      .normalize()
-                      .multiply(strength)
-                      .setY(0.2);
-                    if (NumberConversions.isFinite(vector.getX()) && NumberConversions.isFinite(vector.getZ())) {
-                      // apply the velocity
-                      player.setVelocity(vector);
-                      // check if we should send a labymod emote
-                      if (value instanceof NPCBukkitPlatformSelector npcSelector) {
-                        if (emoteId == -1) {
-                          var emote = labyModEmotes[ThreadLocalRandom.current().nextInt(0, labyModEmotes.length)];
-                          LabyModExtension
-                            .createEmotePacket(this.npcPlatform.packetFactory(), emote)
-                            .schedule(player, npcSelector.handleNPC());
-                        } else {
-                          LabyModExtension
-                            .createEmotePacket(this.npcPlatform.packetFactory(), emoteId)
-                            .schedule(player, npcSelector.handleNPC());
+              this.scheduler.runTask(value.location(), () -> {
+                var nearbyEntities = value.location().getWorld().getNearbyEntities(
+                  value.location(),
+                  distance,
+                  distance,
+                  distance);
+                // loop over all entities and knock them back
+                if (!nearbyEntities.isEmpty()) {
+                  for (var entity : nearbyEntities) {
+                    // check if the entity is a player
+                    if (entity instanceof Player player && !entity.hasPermission("cloudnet.npcs.knockback.bypass")) {
+                      // apply the strength to the curren vector
+                      var vector = player.getLocation().toVector().subtract(value.location().toVector())
+                        .normalize()
+                        .multiply(strength)
+                        .setY(0.2);
+                      if (NumberConversions.isFinite(vector.getX()) && NumberConversions.isFinite(vector.getZ())) {
+                        // apply the velocity
+                        player.setVelocity(vector);
+                        // check if we should send a labymod emote
+                        if (value instanceof NPCBukkitPlatformSelector npcSelector) {
+                          if (emoteId == -1) {
+                            var emote = labyModEmotes[ThreadLocalRandom.current().nextInt(0, labyModEmotes.length)];
+                            LabyModExtension
+                              .createEmotePacket(this.npcPlatform.packetFactory(), emote)
+                              .schedule(player, npcSelector.handleNPC());
+                          } else {
+                            LabyModExtension
+                              .createEmotePacket(this.npcPlatform.packetFactory(), emoteId)
+                              .schedule(player, npcSelector.handleNPC());
+                          }
                         }
                       }
                     }
                   }
                 }
-              }
+              });
             }
           }
         }
@@ -249,6 +253,10 @@ public class BukkitPlatformNPCManagement extends
     return this.npcPlatform;
   }
 
+  public @NonNull TaskScheduler scheduler() {
+    return this.scheduler;
+  }
+
   protected void startEmoteTask(boolean force) {
     // only start the task if not yet running
     if (this.npcEmoteTask == null || force) {
@@ -264,7 +272,7 @@ public class BukkitPlatformNPCManagement extends
           delay = ent.emoteConfiguration().minEmoteDelayTicks();
         }
         // run the task
-        this.npcEmoteTask = this.scheduler.runTaskLaterAsynchronously(this.plugin, () -> {
+        this.npcEmoteTask = this.scheduler.runTaskLaterAsynchronously(() -> {
           // select an emote to play
           var emotes = ent.emoteConfiguration().emoteIds();
           var emoteId = this.randomEmoteId(ent.emoteConfiguration(), emotes);

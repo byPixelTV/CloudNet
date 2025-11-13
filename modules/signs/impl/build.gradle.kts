@@ -27,6 +27,11 @@ repositories {
   maven("https://repo.opencollab.dev/maven-releases/")
   maven("https://repo.opencollab.dev/maven-snapshots/")
   maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+  maven("https://jitpack.io") {
+    mavenContent {
+      includeGroup("com.github.Anon8281")
+    }
+  }
 }
 
 dependencies {
@@ -47,6 +52,7 @@ dependencies {
 
   api(projects.modules.signs.signsApi)
   implementation(projects.ext.bukkitCommand)
+  implementation(libs.universalScheduler)
 
   annotationProcessor(libs.aerogelAuto)
   annotationProcessor(projects.ext.platformInjectSupport.platformInjectProcessor)
@@ -58,6 +64,8 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.shadowJar.configure {
   archiveFileName = Files.signs
+
+  relocate("com.github.Anon8281.universalScheduler", "eu.cloudnetservice.modules.signs.relocate.com.github.anon8281.universalScheduler")
 
   manifest {
     attributes["paperweight-mappings-namespace"] = "mojang"

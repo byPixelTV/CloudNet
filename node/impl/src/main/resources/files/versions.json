@@ -367,6 +367,81 @@
       ]
     },
     {
+      "name": "folia",
+      "environmentType": "MINECRAFT_SERVER",
+      "installSteps": [
+        "PAPER_API",
+        "DOWNLOAD",
+        "BUILD",
+        "COPY_FILTER"
+      ],
+      "website": "https://papermc.io/software/folia/",
+      "versions": [
+        {
+          "name": "1.21.8",
+          "properties": {
+            "copy": {
+              "cache/.*": "/",
+              "versions/.*": "/",
+              "folia\\.jar": "paper.jar"
+            },
+            "jvmOptions": [
+              "-Dpaperclip.patchonly=true"
+            ],
+            "fetchOverPaperApi": true,
+            "versionGroup": "1.21.8"
+          }
+        },
+        {
+          "name": "1.21.6",
+          "properties": {
+            "copy": {
+              "cache/.*": "/",
+              "versions/.*": "/",
+              "folia\\.jar": "paper.jar"
+            },
+            "jvmOptions": [
+              "-Dpaperclip.patchonly=true"
+            ],
+            "fetchOverPaperApi": true,
+            "versionGroup": "1.21.6"
+          }
+        },
+        {
+          "name": "1.21.5",
+          "deprecated": true,
+          "properties": {
+            "copy": {
+              "cache/.*": "/",
+              "versions/.*": "/",
+              "folia\\.jar": "paper.jar"
+            },
+            "jvmOptions": [
+              "-Dpaperclip.patchonly=true"
+            ],
+            "fetchOverPaperApi": true,
+            "versionGroup": "1.21.5"
+          }
+        },
+        {
+          "name": "1.21.4",
+          "deprecated": true,
+          "properties": {
+            "copy": {
+              "cache/.*": "/",
+              "versions/.*": "/",
+              "folia\\.jar": "paper.jar"
+            },
+            "jvmOptions": [
+              "-Dpaperclip.patchonly=true"
+            ],
+            "fetchOverPaperApi": true,
+            "versionGroup": "1.21.4"
+          }
+        }
+      ]
+    },
+    {
       "name": "purpur",
       "environmentType": "MINECRAFT_SERVER",
       "website": "https://purpurmc.org/",

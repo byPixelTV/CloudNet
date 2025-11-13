@@ -16,6 +16,7 @@
 
 package eu.cloudnetservice.modules.npc.impl.platform.bukkit.entity;
 
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import dev.derklaro.reflexion.MethodAccessor;
 import dev.derklaro.reflexion.Reflexion;
 import eu.cloudnetservice.driver.service.ServiceInfoSnapshot;
@@ -49,7 +50,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -70,7 +70,7 @@ public abstract class BukkitPlatformSelectorEntity
   protected final NPC npc;
   protected final Plugin plugin;
   protected final Server server;
-  protected final BukkitScheduler scheduler;
+  protected final TaskScheduler scheduler;
   protected final PlayerManager playerManager;
   protected final BukkitPlatformNPCManagement npcManagement;
 
@@ -88,7 +88,7 @@ public abstract class BukkitPlatformSelectorEntity
     @NonNull NPC npc,
     @NonNull Plugin plugin,
     @NonNull Server server,
-    @NonNull BukkitScheduler scheduler,
+    @NonNull TaskScheduler scheduler,
     @NonNull PlayerManager playerManager,
     @NonNull BukkitPlatformNPCManagement npcManagement
   ) {
@@ -106,7 +106,7 @@ public abstract class BukkitPlatformSelectorEntity
 
   @Override
   public void spawn() {
-    this.scheduler.runTask(this.plugin, () -> {
+    this.scheduler.runTask(() -> {
       // create the inventory view
       this.rebuildInventory(this.npcManagement.inventoryConfiguration());
       // spawn the selector entity
@@ -160,7 +160,7 @@ public abstract class BukkitPlatformSelectorEntity
     if (this.server.isPrimaryThread()) {
       this.doRemove();
     } else {
-      this.scheduler.runTask(this.plugin, this::doRemove);
+      this.scheduler.runTask(this::doRemove);
     }
   }
 
@@ -185,7 +185,7 @@ public abstract class BukkitPlatformSelectorEntity
     // rebuild all items - we can do that async
     this.serviceItems.values().forEach(wrapper -> this.trackService(wrapper.service()));
     // rebuild everything else sync
-    this.scheduler.runTask(this.plugin, () -> {
+    this.scheduler.runTask(() -> {
       this.rebuildInventory(this.npcManagement.inventoryConfiguration());
       this.rebuildInfoLines();
     });
@@ -246,7 +246,7 @@ public abstract class BukkitPlatformSelectorEntity
 
   @Override
   public void stopTrackingService(@NonNull ServiceInfoSnapshot service) {
-    this.scheduler.runTask(this.plugin, () -> {
+    this.scheduler.runTask(() -> {
       // get the old item wrapper
       var wrapper = this.serviceItems.remove(service.serviceId().uniqueId());
       if (wrapper != null) {
