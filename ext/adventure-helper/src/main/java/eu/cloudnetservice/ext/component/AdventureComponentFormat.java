@@ -18,6 +18,7 @@ package eu.cloudnetservice.ext.component;
 
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 final class AdventureComponentFormat extends JavaEditionComponentFormat<Component> {
@@ -25,11 +26,13 @@ final class AdventureComponentFormat extends JavaEditionComponentFormat<Componen
   private static final char HEX_CHAR = '#';
   private static final int HEX_SEG_LENGTH = 8;
 
-  private static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
+  private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.builder()
     .character(COLOR_CHAR)
     .extractUrls()
     .hexColors()
     .build();
+
+  private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
 
   @Override
   public int hexSegmentLength() {
@@ -55,6 +58,7 @@ final class AdventureComponentFormat extends JavaEditionComponentFormat<Componen
 
   @Override
   public @NonNull Component encodeStringToComponent(@NonNull String text) {
-    return SERIALIZER.deserialize(text);
+    var legacyParsed = LEGACY_SERIALIZER.deserialize(text);
+    return MINI_MESSAGE.deserialize(LEGACY_SERIALIZER.serialize(legacyParsed));
   }
 }

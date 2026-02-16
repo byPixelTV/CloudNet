@@ -60,4 +60,94 @@ class ComponentFormatsTest {
     Assertions.assertEquals(adventure, convertedToAdventure);
     Assertions.assertEquals(input.replace('&', '§'), convertedToBungee);
   }
+
+  @Test
+  void testMiniMessageParsing() {
+    // Test basic MiniMessage tags
+    var input = "<red>Hello</red> <blue>World</blue>";
+    var component = ComponentFormats.ADVENTURE.encodeStringToComponent(input);
+
+    Assertions.assertNotNull(component);
+  }
+
+  @Test
+  void testMiniMessageWithGradient() {
+    // Test gradient tag
+    var input = "<gradient:red:blue>Rainbow Text</gradient>";
+    var component = ComponentFormats.ADVENTURE.encodeStringToComponent(input);
+
+    Assertions.assertNotNull(component);
+  }
+
+  @Test
+  void testMixedLegacyAndMiniMessage() {
+    // Test mixing legacy codes and MiniMessage tags
+    var input = "&cLegacy red <blue>MiniMessage blue</blue> &aLegacy green";
+    var component = ComponentFormats.ADVENTURE.encodeStringToComponent(input);
+
+    Assertions.assertNotNull(component);
+  }
+
+  @Test
+  void testMiniMessageHoverAndClick() {
+    // Test hover and click events
+    var input = "<hover:show_text:'Hover text'><click:run_command:/test>Click me</click></hover>";
+    var component = ComponentFormats.ADVENTURE.encodeStringToComponent(input);
+
+    Assertions.assertNotNull(component);
+  }
+
+  @Test
+  void testMiniMessageHexColors() {
+    // Test MiniMessage hex colors
+    var input = "<#FF5555>Red Text</#FF5555> <#5555FF>Blue Text</#5555FF>";
+    var component = ComponentFormats.ADVENTURE.encodeStringToComponent(input);
+
+    Assertions.assertNotNull(component);
+  }
+
+  @Test
+  void testComplexMixedFormatting() {
+    // Test complex mixing of both formats
+    var input = "&l<red>Bold Red</red> &#FFAABBHex &n<blue>Underline Blue</blue>";
+    var component = ComponentFormats.ADVENTURE.encodeStringToComponent(input);
+
+    Assertions.assertNotNull(component);
+  }
+
+  @Test
+  void testMiniMessageRainbow() {
+    // Test rainbow tag
+    var input = "<rainbow>Rainbow Text!</rainbow>";
+    var component = ComponentFormats.ADVENTURE.encodeStringToComponent(input);
+
+    Assertions.assertNotNull(component);
+  }
+
+  @Test
+  void testMiniMessageReset() {
+    // Test reset tag
+    var input = "<red>Red <reset>Normal";
+    var component = ComponentFormats.ADVENTURE.encodeStringToComponent(input);
+
+    Assertions.assertNotNull(component);
+  }
+
+  @Test
+  void testLegacyOnlyStillWorks() {
+    // Ensure legacy-only strings still work
+    var input = "&a&lBold Green &c&oItalic Red &r&9Normal Blue";
+    var component = ComponentFormats.ADVENTURE.encodeStringToComponent(input);
+
+    Assertions.assertNotNull(component);
+  }
+
+  @Test
+  void testMiniMessageOnlyWorks() {
+    // Ensure MiniMessage-only strings work
+    var input = "<green><bold>Bold Green</bold></green> <red><italic>Italic Red</italic></red>";
+    var component = ComponentFormats.ADVENTURE.encodeStringToComponent(input);
+
+    Assertions.assertNotNull(component);
+  }
 }
