@@ -213,7 +213,7 @@ junit = ["junitApi", "junitParams", "junitEngine"]
 dockerJava = ["dockerJavaApi", "dockerJavaHttpclient5"]
 testContainers = ["testContainers", "testContainersJunit"]
 nightConfig = ["nightConfigToml", "nightConfigYaml", "nightConfigJson"]
-adventure = ["adventureApi", "adventureSerializerGson", "adventureSerializerLegacy"]
+adventure = ["adventureApi", "adventureSerializerGson", "adventureSerializerLegacy", "adventureMiniMessage"]
 
 proxyPlatform = ["bungeecord", "velocity", "waterdogpe"]
 serverPlatform = ["spigot", "sponge", "nukkitX", "minestom", "minestomExtensions", "limboloohp"]
